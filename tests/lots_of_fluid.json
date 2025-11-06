@@ -1,0 +1,54 @@
+{
+    "dt": 0.02,
+    "n_grid": 50,
+    "grid_lim": 1.0,
+    "gravity": [0.0, -9.8, 0.0],
+    "density": 1.0,
+    "use_gauss_seidel": true,
+    "num_iterations": 200,
+    "omega": 1.7,
+    "pic_flip_alpha": 0.1,
+    "jacobi_alpha": 1.0,
+    "frames_per_output": 100,
+    "initial_particles": {
+        "n_particles": 100000,
+        "center": [0.125, 0.5, 0.5],
+        "size": [0.25, 1.0, 1.0],
+        "sampling_type": "grid",
+        "k": 30
+    },
+    "particle_events": [
+    {
+        "frame": 500,
+        "n_particles": 100000,
+        "center": [0.125, 0.5, 0.5],
+        "size": [0.25, 1.0, 1.0],
+        "sampling_type": "grid",
+        "k": 30
+    },
+    {
+        "frame": 1000,
+        "n_particles": 100000,
+        "center": [0.125, 0.5, 0.5],
+        "size": [0.25, 1.0, 1.0],
+        "sampling_type": "grid",
+        "k": 30
+    },
+    {
+        "frame": 1500,
+        "n_particles": 100000,
+        "center": [0.125, 0.5, 0.5],
+        "size": [0.25, 1.0, 1.0],
+        "sampling_type": "grid",
+        "k": 30
+    }
+    ],
+    "solid_boxes": [
+      {
+        "center": [0.5, 0.2, 0.5],
+        "size": [0.5, 0.5, 0.5]
+      }
+    ]
+  }
+  
+  
