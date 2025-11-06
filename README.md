@@ -3,8 +3,9 @@
 In this assignment you will learn to implement a standard hybrid particle-grid fluid simulator that solves on the GPU.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/cd0a91ab-99d8-4c03-80b6-b4f9d4fb1535" width="100%">
+  <img src="https://github.com/user-attachments/assets/c5857055-06ff-42be-b50a-3d6bfef6cf15" width="100%">
 </p>
+
 **Rendered assignment output played back at high-speed**
 
 
@@ -80,14 +81,14 @@ PIC-FLIP was introduced into graphics in [this paper](https://www.cs.ubc.ca/~rbr
 ## PIC-FLIP Pipeline
 In this assignment, you will be implementing a fluid simulator according to the following PIC-FLIP Pipeline:
 
-<img width="931" height="367" alt="image" src="https://github.com/user-attachments/assets/80bdff77-95b1-4f9d-a6ab-079aa9281f19" />
+<img width="931" height="367" alt="image" src="https://github.com/user-attachments/assets/d06464e9-11ef-43dd-bc74-3bca453a4de0" />
 
 This method involves doing operations in two data structures: particles and a grid. As you learned in class, and as presented in the pipeline above, certain operations are more amenable to either one of the data structures. You will be responsible for implementing the operations for advection, body force (gravity), pressure projection, and the grid-to-particle and particle-to-grid interpolations that transfers data between the particle and the grid data structures.
 
 ## Advection 
 Advection moves particles through the velocity field. For each particle, update its position using the simple forward Euler timestepping:
 
-<img width="397" height="360" alt="image" src="https://github.com/user-attachments/assets/6263947d-a310-4ec1-a548-b4c32e9da4fb" />
+<img width="397" height="360" alt="image" src="https://github.com/user-attachments/assets/9f655313-3c90-4a52-be7c-9c02e14354fb" />
 
 Advection is simply physically moving the particle forward by shifting its position based on its current velocity. The positions of these particles are markers that dictate which portion of the domain is considered as fluid (any grid cell that contains a particle is considered as being fluid, whose velocity is then solved for in subsequent steps).
 
@@ -95,7 +96,7 @@ Advection is simply physically moving the particle forward by shifting its posit
 Body forces are external forces that act uniformly throughout the fluid volume. In this assignment, we primarily consider gravity, which accelerates the fluid downwards.
 Body forces are applied with simple forward Euler again, this time operating on velocities and, taking `g` to be the gravitational acceleration vector (remember that acceleration is the time-derivative of velocity):
 
-<img width="326" height="69" alt="Screenshot 2025-11-05 at 2 55 43 AM" src="https://github.com/user-attachments/assets/e754beb7-0738-4189-83e8-3c4af155a21e" />
+<img width="652" height="138" alt="image" src="https://github.com/user-attachments/assets/2baca344-1c32-4e0f-b238-0fe9b6193ab7" />
 
 Note that this can be done in either the particle or grid regimes. In this assignment, the implementation uses it inside the grid (the warp tid's are given to you and should make that clear).
 
@@ -103,7 +104,7 @@ Note that this can be done in either the particle or grid regimes. In this assig
 As previously mentioned, we need to operate on both a particle data structure as well as a grid data structure. The grid data structure, because of the spatial derivatives involved, have to be of a specific form.
 The PIC-FLIP method uses a **staggered grid** (also called a MAC grid - Marker-and-Cell grid), which visually have the following schematic:
 
-<img width="447" height="350" alt="image" src="https://github.com/user-attachments/assets/7a445ae7-2406-45ae-b114-967800270bed" />
+<img width="447" height="350" alt="image" src="https://github.com/user-attachments/assets/8c6a30c5-910f-431a-9f08-d0ae1ffcdd7c" />
 
 Here, pressure and velocity components all "live" in different places in space. More specifically:
 - **Pressures** (green squares) are stored at cell centers (i, j, k)
@@ -118,11 +119,11 @@ This specific layout ensures that taking spatial derivatives end up placed where
 ## Pressure Projection
 Pressure projection is the step that enforces incompressibility (∇·u = 0) by correcting the velocity field using the pressure gradient. Note that this will be the most involved part of the assignment, and involves solving the following equations:
 
-<img width="338" height="133" alt="image" src="https://github.com/user-attachments/assets/2258c147-e11b-4499-be4a-d37f07d8a174" />
+<img width="338" height="133" alt="image" src="https://github.com/user-attachments/assets/b08a963f-f156-4a77-9dd1-84649a6d8136" />
 
 and
 
-<img width="439" height="142" alt="image" src="https://github.com/user-attachments/assets/09899091-7153-484f-bb1f-1320fa076e21" />
+<img width="439" height="142" alt="image" src="https://github.com/user-attachments/assets/03af478b-f4b1-4544-beb8-222f707a19cf" />
 
 Numerically, this involves three steps:
 
@@ -140,7 +141,7 @@ The divergence operator computes ∇·v at each cell center from the staggered v
 
 For a cell at (i, j, k), the divergence is:
 
-<img width="945" height="404" alt="image" src="https://github.com/user-attachments/assets/e7e0e13d-89d6-4e15-86da-0bd2216ba8a8" />
+<img width="945" height="404" alt="image" src="https://github.com/user-attachments/assets/c356e818-be2e-4357-9d1f-852611ad18f5" />
 
 where:
 - u[i,j] is the x-velocity at face (i-1/2, j, k)
@@ -156,7 +157,7 @@ The Laplace operator (∇²) is used in the Poisson equation to solve for pressu
 
 The discrete Laplacian at cell center (i, j, k) is:
 
-<img width="931" height="517" alt="image" src="https://github.com/user-attachments/assets/379ba7fd-afb3-4e27-9c99-54416418c104" />
+<img width="931" height="517" alt="image" src="https://github.com/user-attachments/assets/001ca134-5caa-4424-8921-f76647c33e72" />
 
 This is the standard 5-point stencil in 2D, you can derive a similar 7-point stencil in 3D. The Poisson equation ∇²p = divergence is solved iteratively using either the Jacobi method or Gauss-Seidel with Successive Over-Relaxation (SOR) (see later section). Boundary conditions must be handled:
 - **Free surface (air cells)**: p = 0 (Dirichlet boundary condition)
@@ -165,7 +166,7 @@ This is the standard 5-point stencil in 2D, you can derive a similar 7-point ste
 ### Gradient Operator
 The gradient operator computes ∇p for the pressure projection step. This now must live on **cell faces** since you need to compute central finite differences of pressures which live on cell centers.
 
-<img width="786" height="391" alt="image" src="https://github.com/user-attachments/assets/67c4c8e4-4f4c-4f72-af73-90f638ed8cc5" />
+<img width="786" height="391" alt="image" src="https://github.com/user-attachments/assets/a588d9c3-ae6a-422f-952c-e0a9c99cee7a" />
 
 On a staggered grid, the gradient is computed at face locations:
 
@@ -178,15 +179,15 @@ The velocity is then updated using: v_new = v_old - ∇p × dt / ρ. This correc
 ### Jacobi Iteration
 We want to find a solution for pressures that solves the following equation:
 
-<img width="268" height="119" alt="Screenshot 2025-11-05 at 1 36 07 PM" src="https://github.com/user-attachments/assets/5ef089d8-aaec-4fdc-a74c-2a168d1acc05" />
+<img width="536" height="238" alt="image" src="https://github.com/user-attachments/assets/058aa55e-f5a3-437a-b4af-8c1b1ad7fd4e" />
 
 Which if we discretize according to the above Laplacian operator, looks like:
 
-<img width="497" height="127" alt="Screenshot 2025-11-05 at 1 36 43 PM" src="https://github.com/user-attachments/assets/855c30e0-119a-4ae9-8929-2efefd30206b" />
+<img width="994" height="254" alt="image" src="https://github.com/user-attachments/assets/9280107b-e059-4bc4-9ba4-aad2c99e86c7" />
 
 where P is the pressure at our current grid cell, sum(P_nbr) is the sum of pressures at the neighbouring grid cells (i±1, j±1, k±1), and n_nbr is the number of these neighbours (4 in 2D, 6 in 3D). Assuming we have an accurate estimate for the neighbouring pressures, this means we can isolate for the pressure at our current point:
 
-<img width="492" height="155" alt="Screenshot 2025-11-05 at 1 38 45 PM" src="https://github.com/user-attachments/assets/2b1ca58e-22a5-40d7-80f7-779ae5339482" />
+<img width="984" height="310" alt="image" src="https://github.com/user-attachments/assets/d13d5a24-5107-40de-a77a-7c16d6529061" />
 
 Taking this to be true everywhere, this means that we can start off with some guess for the pressures everywhere, and iteratively compute new pressures. This gives increasingly better estimates for the solution pressure that satisfies this equation, which hopefully converges to the true solution. This iterative method of guessing and recomputing is called Jacobi iteration, which updates all grid cells in parallel using values from the previous iteration.
 
@@ -210,9 +211,9 @@ Particle-to-grid (P2G) transfers particle mass and momentum to the grid. For eac
    - Mass: m_grid += weight × m_particle
    - Velocity: u_grid += weight × v_particle
 
-<img width="945" height="528" alt="image" src="https://github.com/user-attachments/assets/1caceecd-9ca0-465f-99d6-d39afeb95d32" />
+<img width="945" height="528" alt="image" src="https://github.com/user-attachments/assets/15d197a1-3c25-47a9-9ed3-d54c493b57e6" />
 
-<img width="947" height="531" alt="image" src="https://github.com/user-attachments/assets/421bd236-2e62-40b9-8043-7fa5843745be" />
+<img width="947" height="531" alt="image" src="https://github.com/user-attachments/assets/268d1abd-41d8-45fe-903e-7fcdedc55bed" />
 
 ## Grid-to-Particle
 Grid-to-particle (G2P) transfers the updated grid velocity back to particles. This is where PIC-FLIP blending happens:
@@ -230,7 +231,7 @@ Typical values for α are around 0.01-0.1, giving mostly FLIP with a small PIC c
 
 For interpolation, use trilinear interpolation weights based on the fractional position of the particle within its containing grid cell:
 
-<img width="936" height="524" alt="image" src="https://github.com/user-attachments/assets/c4b63892-0fd6-4030-bfe3-50b2ffaf2b96" />
+<img width="936" height="524" alt="image" src="https://github.com/user-attachments/assets/ddf1e72e-5f53-4e50-8600-04dc31627960" />
 
 ## Debugging Hints
 
