@@ -200,7 +200,6 @@ Taking this to be true everywhere, this means that we can start off with some gu
 4. **Iteration**: Repeat this process many times (might take ~500-1000 iterations to have the fluid not lose volume) until convergence
 
 The Jacobi method is simple and parallelizable but converges slowly.
-For better performance, I have left an empty file to implement Gauss-Seidel with Successive Over-Relaxation (SOR), which essentially replaces a single Jacobi update with two Gauss-Seidel updates, set up in a checkerboard pattern. Essentially we leverage the knowledge that our Laplacian stencil only touches the immediate neighbours, so we compute half of the checkerboard, then use the newly computed values to compute the other half of the checkerboard, and repeat. Note that completion of this file will not be marked, but the modification from Jacobi is fairly straightforward and it greatly improves runtimes (reduces reasonable iteration counts to about 100).
 
 ## Particle-to-Grid
 Particle-to-grid (P2G) transfers particle mass and momentum to the grid. For each particle:
@@ -238,6 +237,7 @@ For interpolation, use trilinear interpolation weights based on the fractional p
 1. I suggest starting by implementing advect and apply_gravity, then g2p and p2g. These files can be debugged independently of pressure projection (it should just let your particles fall down). Implementing pressure projection is near impossible without getting these files working.
 2. I've included a visual in polyscope for previewing the fluid and solid cells. You can make use of these to visually reason on where grid points are. A lot of the discrete operators (gradient, divergence, laplacian) involve local stencils that simply need to query the nearby grid cells. It is very easy to have an off-by-one error here. Draw yourself a diagram on what each grid stencil should look like.
 3. If you are getting memory access issues, it's likely because you're trying to query a grid point that's out of bounds. Make sure to include bounds checks that your indexing doesn't go below 0 or go above the grid limits.
+4. You can test all files minus jacobi_pressure_iteration.py by switching the "use_gauss_seidel" flag on the json scene files to true. Instead of using your implementation of jacobi_pressure_iteration, it replaces it with a Gauss-Seidel solve. This method converges faster and will be helpful for checking if the rest of your simulation is working correctly.
 
 ## Admissable Code and Libraries
 You are allowed to use any functions in the warp and warp.sparse packages. You ARE NOT allowed to use code from other warp packages like warp.fem. You cannot use code from any other external simulation library.  

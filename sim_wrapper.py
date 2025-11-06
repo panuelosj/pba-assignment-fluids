@@ -41,8 +41,9 @@ class Sim_Wrapper:
         
         # Set solver parameters from scene
         self.solver.use_gauss_seidel = self.scene.use_gauss_seidel
-        self.solver.num_iterations = self.scene.num_iterations
-        self.solver.omega = self.scene.omega
+        self.solver.num_jacobi_iterations = self.scene.num_jacobi_iterations
+        self.solver.num_gauss_seidel_iterations = self.scene.num_gauss_seidel_iterations
+        self.solver.gauss_seidel_omega = self.scene.gauss_seidel_omega
         self.solver.pic_flip_alpha = self.scene.pic_flip_alpha
         self.solver.jacobi_alpha = self.scene.jacobi_alpha
         

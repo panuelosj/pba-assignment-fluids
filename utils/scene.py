@@ -25,8 +25,9 @@ class Scene:
                  gravity: Optional[List[float]] = None, density: float = 1000.0,
                  initial_particles: Optional[Dict] = None,
                  use_gauss_seidel: bool = True,
-                 num_iterations: int = 200,
-                 omega: float = 1.7,
+                 num_jacobi_iterations: int = 1000,
+                 num_gauss_seidel_iterations: int = 200,
+                 gauss_seidel_omega: float = 1.7,
                  pic_flip_alpha: float = 0.1,
                  jacobi_alpha: float = 1.0,
                  frames_per_output: int = 100):
@@ -41,8 +42,9 @@ class Scene:
             density: Fluid density
             initial_particles: Dict with keys: n_particles, center, size, sampling_type, k
             use_gauss_seidel: Use Gauss-Seidel SOR solver (True) or Jacobi solver (False)
-            num_iterations: Number of pressure solver iterations
-            omega: SOR relaxation parameter for Gauss-Seidel (1.0 = standard GS, >1.0 = over-relaxation)
+            num_jacobi_iterations: Number of Jacobi pressure solver iterations (default: 1000)
+            num_gauss_seidel_iterations: Number of Gauss-Seidel pressure solver iterations (default: 200)
+            gauss_seidel_omega: SOR relaxation parameter for Gauss-Seidel (1.0 = standard GS, >1.0 = over-relaxation)
             pic_flip_alpha: PIC-FLIP blending parameter for g2p (0.0 = pure FLIP, 1.0 = pure PIC)
             jacobi_alpha: Relaxation parameter for Jacobi iteration (1.0 = standard Jacobi)
             frames_per_output: Number of simulation frames to run between outputs
@@ -55,8 +57,9 @@ class Scene:
         
         # Pressure solver parameters
         self.use_gauss_seidel = use_gauss_seidel
-        self.num_iterations = num_iterations
-        self.omega = omega
+        self.num_jacobi_iterations = num_jacobi_iterations
+        self.num_gauss_seidel_iterations = num_gauss_seidel_iterations
+        self.gauss_seidel_omega = gauss_seidel_omega
         self.pic_flip_alpha = pic_flip_alpha
         self.jacobi_alpha = jacobi_alpha
         self.frames_per_output = frames_per_output
@@ -95,8 +98,9 @@ class Scene:
             "gravity": self.gravity,
             "density": self.density,
             "use_gauss_seidel": self.use_gauss_seidel,
-            "num_iterations": self.num_iterations,
-            "omega": self.omega,
+            "num_jacobi_iterations": self.num_jacobi_iterations,
+            "num_gauss_seidel_iterations": self.num_gauss_seidel_iterations,
+            "gauss_seidel_omega": self.gauss_seidel_omega,
             "pic_flip_alpha": self.pic_flip_alpha,
             "jacobi_alpha": self.jacobi_alpha,
             "frames_per_output": self.frames_per_output,
@@ -129,8 +133,9 @@ class Scene:
             density=data.get("density", 1000.0),
             initial_particles=data.get("initial_particles", None),
             use_gauss_seidel=data.get("use_gauss_seidel", True),
-            num_iterations=data.get("num_iterations", 200),
-            omega=data.get("omega", 1.7),
+            num_jacobi_iterations=data.get("num_jacobi_iterations", 1000),
+            num_gauss_seidel_iterations=data.get("num_gauss_seidel_iterations", data.get("num_iterations", 200)),  # Support old "num_iterations" key for backward compatibility
+            gauss_seidel_omega=data.get("gauss_seidel_omega", data.get("omega", 1.7)),  # Support old "omega" key for backward compatibility
             pic_flip_alpha=data.get("pic_flip_alpha", 0.1),
             jacobi_alpha=data.get("jacobi_alpha", 1.0),
             frames_per_output=data.get("frames_per_output", 100)

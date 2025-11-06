@@ -4,9 +4,7 @@ import numpy as np
 import torch
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
-from utils.engine_utils import *
-from utils.structs import *
-from utils.given_kernels import *
+from utils import *
 
 from assignment import *
 
@@ -16,8 +14,9 @@ class Simulator_WARP:
         self.time_profile = {}
         self.i = 0
         self.use_gauss_seidel = True  # Flag to switch between Jacobi and Gauss-Seidel solvers
-        self.num_iterations = 200  # Number of pressure solver iterations
-        self.omega = 1.7  # SOR relaxation parameter for Gauss-Seidel
+        self.num_jacobi_iterations = 1000  # Number of Jacobi pressure solver iterations
+        self.num_gauss_seidel_iterations = 200  # Number of Gauss-Seidel pressure solver iterations
+        self.gauss_seidel_omega = 1.7  # SOR relaxation parameter for Gauss-Seidel
         self.pic_flip_alpha = 0.1  # PIC-FLIP blending parameter for g2p
         self.jacobi_alpha = 1.0  # Relaxation parameter for Jacobi
         self.solid_boxes = []  # List of (center, size) tuples for solid bounding boxes
@@ -333,7 +332,7 @@ class Simulator_WARP:
         # Step 3: Solve Poisson equation for pressure
         if self.use_gauss_seidel:
             # Gauss-Seidel SOR parameters
-            for iter in range(self.num_iterations):
+            for iter in range(self.num_gauss_seidel_iterations):
                 # Copy current pressure to pressure_old for ping-pong buffer
                 wp.launch(
                     kernel=copy_pressure_to_old,
@@ -345,21 +344,21 @@ class Simulator_WARP:
                 wp.launch(
                     kernel=gauss_seidel_sor_pressure_iteration,
                     dim=(grid_size),
-                    inputs=[self.state, self.model, self.omega, 0],
+                    inputs=[self.state, self.model, self.gauss_seidel_omega, 0],
                     device=device,
                 )
                 # Update black cells (color = 1)
                 wp.launch(
                     kernel=gauss_seidel_sor_pressure_iteration,
                     dim=(grid_size),
-                    inputs=[self.state, self.model, self.omega, 1],
+                    inputs=[self.state, self.model, self.gauss_seidel_omega, 1],
                     device=device,
                 )
         else:
             # Jacobi iteration parameters
             beta = 1.0 - self.jacobi_alpha  # Damping parameter (0 = standard Jacobi)
             
-            for iter in range(self.num_iterations):
+            for iter in range(self.num_jacobi_iterations):
                 # Copy current pressure to pressure_old for ping-pong buffer
                 wp.launch(
                     kernel=copy_pressure_to_old,
