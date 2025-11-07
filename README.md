@@ -141,7 +141,7 @@ The divergence operator computes ∇·v at each cell center from the staggered v
 
 For a cell at (i, j, k), the divergence is:
 
-<img width="945" height="404" alt="image" src="https://github.com/user-attachments/assets/c356e818-be2e-4357-9d1f-852611ad18f5" />
+<img width="945" height="404" alt="image" src="https://github.com/user-attachments/assets/30319504-4e8f-4803-99c4-d4afdfbd96e7" />
 
 where:
 - u[i,j] is the x-velocity at face (i-1/2, j, k)
@@ -157,7 +157,7 @@ The Laplace operator (∇²) is used in the Poisson equation to solve for pressu
 
 The discrete Laplacian at cell center (i, j, k) is:
 
-<img width="931" height="517" alt="image" src="https://github.com/user-attachments/assets/001ca134-5caa-4424-8921-f76647c33e72" />
+<img width="931" height="517" alt="image" src="https://github.com/user-attachments/assets/ec07f820-0ab7-4edb-bb92-28b7f43366d0" />
 
 This is the standard 5-point stencil in 2D, you can derive a similar 7-point stencil in 3D. The Poisson equation ∇²p = divergence is solved iteratively using either the Jacobi method or Gauss-Seidel with Successive Over-Relaxation (SOR) (see later section). Boundary conditions must be handled:
 - **Free surface (air cells)**: p = 0 (Dirichlet boundary condition)
@@ -166,7 +166,7 @@ This is the standard 5-point stencil in 2D, you can derive a similar 7-point ste
 ### Gradient Operator
 The gradient operator computes ∇p for the pressure projection step. This now must live on **cell faces** since you need to compute central finite differences of pressures which live on cell centers.
 
-<img width="786" height="391" alt="image" src="https://github.com/user-attachments/assets/a588d9c3-ae6a-422f-952c-e0a9c99cee7a" />
+<img width="786" height="391" alt="image" src="https://github.com/user-attachments/assets/286d3167-a18a-4706-8bfb-0317ff4fc402" />
 
 On a staggered grid, the gradient is computed at face locations:
 
@@ -213,7 +213,7 @@ Particle-to-grid (P2G) transfers particle mass and momentum to the grid. For eac
 
 <img width="945" height="528" alt="image" src="https://github.com/user-attachments/assets/15d197a1-3c25-47a9-9ed3-d54c493b57e6" />
 
-<img width="947" height="531" alt="image" src="https://github.com/user-attachments/assets/268d1abd-41d8-45fe-903e-7fcdedc55bed" />
+<img width="947" height="531" alt="image" src="https://github.com/user-attachments/assets/dce4ba13-a377-43ce-81a5-b70ff13cf3eb" />
 
 ## Grid-to-Particle
 Grid-to-particle (G2P) transfers the updated grid velocity back to particles. This is where PIC-FLIP blending happens:
