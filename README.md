@@ -3,7 +3,7 @@
 In this assignment you will learn to implement a standard hybrid particle-grid fluid simulator that solves on the GPU.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/c5857055-06ff-42be-b50a-3d6bfef6cf15" width="100%">
+  <img src="https://github.com/user-attachments/assets/6c792bf4-7e35-4f1f-b648-fff1996b18d3" width="100%">
 </p>
 
 **Rendered assignment output played back at high-speed**
