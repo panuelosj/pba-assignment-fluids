@@ -213,7 +213,7 @@ Particle-to-grid (P2G) transfers particle mass and momentum to the grid. For eac
 
 <img width="945" height="528" alt="image" src="https://github.com/user-attachments/assets/15d197a1-3c25-47a9-9ed3-d54c493b57e6" />
 
-<img width="947" height="531" alt="image" src="https://github.com/user-attachments/assets/dce4ba13-a377-43ce-81a5-b70ff13cf3eb" />
+<img width="947" height="531" alt="image" src="https://github.com/user-attachments/assets/2bcd2bbb-4c70-4ea3-b2a8-49ea52c67c6f" />
 
 ## Grid-to-Particle
 Grid-to-particle (G2P) transfers the updated grid velocity back to particles. This is where PIC-FLIP blending happens:
