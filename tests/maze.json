@@ -8,9 +8,9 @@
     "num_jacobi_iterations": 1000,
     "num_gauss_seidel_iterations": 200,
     "gauss_seidel_omega": 1.7,
-    "pic_flip_alpha": 0.1,
+    "pic_flip_alpha": 0.9,
     "jacobi_alpha": 1.0,
-    "frames_per_output": 1,
+    "frames_per_output": 30,
     "initial_particles": {
         "n_particles": 10000,
         "center": [0.5, 0.8, 0.5],
@@ -20,7 +20,7 @@
     },
     "particle_events": [
     {
-      "frame": 10000,
+      "frame": 3000,
       "n_particles": 10000,
       "center": [0.5, 0.8, 0.5],
       "size": [0.9, 0.15, 0.9],
@@ -28,7 +28,7 @@
       "k": 30
     },
     {
-      "frame": 20000,
+      "frame": 6000,
       "n_particles": 10000,
       "center": [0.5, 0.8, 0.5],
       "size": [0.9, 0.15, 0.9],
@@ -36,7 +36,7 @@
       "k": 30
     },
     {
-      "frame": 30000,
+      "frame": 9000,
       "n_particles": 10000,
       "center": [0.5, 0.8, 0.5],
       "size": [0.9, 0.15, 0.9],

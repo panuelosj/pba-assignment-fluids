@@ -8,9 +8,9 @@
     "num_jacobi_iterations": 1000,
     "num_gauss_seidel_iterations": 200,
     "gauss_seidel_omega": 1.7,
-    "pic_flip_alpha": 0.1,
+    "pic_flip_alpha": 0.9,
     "jacobi_alpha": 1.0,
-    "frames_per_output": 1,
+    "frames_per_output": 10,
     "initial_particles": {
         "n_particles": 100000,
         "center": [0.125, 0.5, 0.5],

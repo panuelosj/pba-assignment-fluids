@@ -24,13 +24,13 @@ class Scene:
     def __init__(self, dt: float = 0.02, n_grid: int = 100, grid_lim: float = 1.0,
                  gravity: Optional[List[float]] = None, density: float = 1000.0,
                  initial_particles: Optional[Dict] = None,
-                 use_gauss_seidel: bool = True,
+                 use_gauss_seidel: bool = False,
                  num_jacobi_iterations: int = 1000,
                  num_gauss_seidel_iterations: int = 200,
                  gauss_seidel_omega: float = 1.7,
                  pic_flip_alpha: float = 0.1,
                  jacobi_alpha: float = 1.0,
-                 frames_per_output: int = 100):
+                 frames_per_output: int = 1):
         """
         Initialize a scene.
         
