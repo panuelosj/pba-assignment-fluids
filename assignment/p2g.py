@@ -15,7 +15,7 @@ def p2g(state: StateStruct, model: ModelStruct):
     INPUT VARIABLES (from state):
     - particle_x[p]: vec3 - World-space position of particle p
     - particle_mass[p]: float - Mass of particle p
-    - particle_v[p]: vec3 - Momentum vector of particle p
+    - particle_v[p]: vec3 - Velocity vector of particle p
     
     INPUT VARIABLES (from model):
     - inv_dx: float - Inverse of grid cell size (1/dx), used to convert world coordinates to grid coordinates
