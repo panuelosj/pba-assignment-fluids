@@ -49,5 +49,4 @@ def pressure_projection(
         Velocity is set to 0 at faces adjacent to solid cells.
     """
     grid_x, grid_y, grid_z = wp.tid()
-    state.grid_v_out[grid_x, grid_y, grid_z] = state.grid_v_in[grid_x, grid_y, grid_z]
 
