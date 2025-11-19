@@ -27,6 +27,7 @@ def copy_v_in_to_v_out(
 ):
     grid_x, grid_y, grid_z = wp.tid()
     if state.grid_m[grid_x, grid_y, grid_z] > 1e-15:
+        state.grid_v_in[grid_x, grid_y, grid_z] = state.grid_v_in[grid_x, grid_y, grid_z] / state.grid_m[grid_x, grid_y, grid_z]
         state.grid_v_out[grid_x, grid_y, grid_z] = state.grid_v_in[grid_x, grid_y, grid_z]
     else:
         # No mass, just copy (or set to zero)
